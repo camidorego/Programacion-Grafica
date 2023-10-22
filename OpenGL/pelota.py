@@ -162,10 +162,32 @@ def display():
     #Hexagono(0.3)
     Pelota(0.1)
     
+    #Habilita el cálculo de iluminación en OpenGL.
     glEnable(GL_LIGHTING)
+    
+    # Habilita una fuente de luz específica, en este caso 0
     glEnable(GL_LIGHT0)
+
+    #La posición de una fuente de luz en OpenGL se establece mediante 
     glLightfv(GL_LIGHT0, GL_POSITION, light_position)
+
+    # La dirección de una fuente de luz direccional se configura con
     glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, look_at_center)
+
+    # La propiedad difusa de un material controla cómo reacciona la superficie del objeto a la luz incidente.
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, (1,1,1))
+
+    #La propiedad especular controla los reflejos de alta luz en objetos con superficies brillantes
+    glMaterialfv(GL_FRONT, GL_SPECULAR, (1,0,0.2))
+
+    #La propiedad ambiente controla la iluminación uniforme que se produce en la escena
+    glMaterialfv(GL_FRONT, GL_AMBIENT, (1,0,0))
+
+    #La propiedad de emisión controla si un objeto emite su propia luz.
+    #glMaterialfv(GL_FRONT, GL_EMISSION, (0,1,0))
+
+    # Establece el modo de sombreado suave. Los colores se interpolan entre los vértices de un polígono, lo que resulta en una apariencia suave y más realista.
+    glShadeModel(GL_SMOOTH)
 
 
     glutSwapBuffers()
