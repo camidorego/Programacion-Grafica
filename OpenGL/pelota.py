@@ -3,152 +3,189 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 import math
 
-altura, ancho = 800, 800
+width, height = 800, 800
 
-ojox, ojoy, ojoz = 0, 1, 2
-
-def cara(vertices, color):
-    glColor(color[0], color[1], color[2], 1)
-    glBegin(GL_POLYGON)
-    for v in vertices:
-        glVertex3fv(v)
-    glEnd()
-
-def display():
-    global ojox, ojoy, ojoz
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    
-    glMatrixMode(GL_PROJECTION)
-    glLoadIdentity()
-    gluPerspective(35, altura/ancho, 0.1, 10.0)
-    
-    glMatrixMode(GL_MODELVIEW)
-    glLoadIdentity()
-    
-    ojox += 0.2
-    gluLookAt(ojox, ojoy, ojoz, 0, 0, 0, 0.0, 1.0, 0.0)
-    
-    #glEnable(GL_LIGHTING)
-    #glEnable(GL_LIGHT0)
-    
-    # Dibuja la pelota de fútbol
-    #Pentagono(0.1)  # Cambié el valor Z a 1.0 para colocarlo en el eje Z
-    Pelota()
-    
-    glutSwapBuffers()
+ojox, ojoy, ojoz = 1, 1, 2
 
 def ejes():
-    largo = 2
+    largo=2
+
     glBegin(GL_LINES)
-    glColor3f(1, 0, 0)
-    glVertex3f(0, 0, 0)
-    glVertex3f(largo, 0, 0)
 
-    glColor3f(0, 1, 0)
-    glVertex3f(0, 0, 0)
-    glVertex3f(0, largo, 0)
+    # ejes x -> rojo
+    glColor3f(1,0,0)
+    glVertex3f(0,0,0)
+    glVertex3f(largo,0,0)
 
-    glColor3f(0, 0, 1)
-    glVertex3f(0, 0, 0)
-    glVertex3f(0, 0, largo)
+    # eje y -> verde
+    glColor3f(0,1,0)
+    glVertex3f(0,0,0)
+    glVertex3f(0,largo,0)
+
+    #eje z -> azul
+    glColor3f(0,0,1)
+    glVertex3f(0,0,0)
+    glVertex3f(0,0,largo)
 
     glEnd()
 
-def calcular_centro_pentagono(radius):
-    # El centro estará en el punto medio del eje Z y la altura será 0
-    center = (radius,math.cos(math.radians(72/2))*radius,0)
-    return center
+def dibujar_cara(vertices, color):
+    glColor3f(*color)
 
-def Hexagono(radius):
-    #center=[0,0,0]
-    center = calcular_centro_pentagono(radius)
-    vertices = []
-    for i in range(6):
-        angle = math.radians(i * 60)
-        x = center[0] + radius * math.cos(angle)
-        y = center[1] + radius * math.sin(angle)
-        z = center[2]
-        vertices.append((x, y, z))
-    return vertices
+    glBegin(GL_POLYGON)
+    for v in vertices:
+        glVertex3f(*v)
+    glEnd()
 
+def Pentagono(largo):
+    radio_p = (largo / (2 * math.sin(math.radians(72/2))))
+    ap_p = largo/(2*math.tan(math.radians(72/2))) # apotema
+    d_p = largo*math.sin(math.radians(72)) # distancia entre base y vertice de los costados
+    a_p = largo*math.cos(math.radians(72)) # distancia horizontal entre el vertice superior y la punta del veritce de los costados
 
-
-def Pentagono(radius):
-    center = calcular_centro_pentagono(radius)
-    #center=[0,0,0]
-    vertices = []
-    for i in range(5):
-        angle = math.radians(i * 72)
-        x = center[0] + radius * math.cos(angle)
-        y = center[1] + radius * math.sin(angle)
-        z = center[2]
-        vertices.append((x, y, z))
+    vertices_p=[]
     
-    return vertices
-    
-    # ejes()
-    # glPushMatrix()
-    # glRotate(17,0,0,1)
-    # cara(vertices, (0.4, 0.2, 0.5))
-    # glPopMatrix()
+    vertices_p.append((0, 0, 0)) 
+    vertices_p.append((largo, 0, 0))
+    vertices_p.append((largo/2 + radio_p, d_p, 0))
+    vertices_p.append((largo/2, ap_p + radio_p, 0))
+    vertices_p.append((-(radio_p-largo/2), d_p, 0))
+    # pentagono central
+    dibujar_cara(vertices_p, (1, 0, 0))
+    glFlush()
 
-    # glPushMatrix()
-    # glTranslate(radius*2-radius/3,0,0)
-    # #glRotate(54,0,0,1)
-    # glRotate(17-30,0,0,1)
-    
-    # cara(vertices,(0.2, 0.4, 0.8))
-    # glPopMatrix()
+def Hexagono(largo):
+    radio_h = (largo / (2 * math.sin(math.radians(60/2))))
+    ap_h = largo/(2*math.tan(math.radians(60/2))) # apotema
+    d_h = largo*math.cos(math.radians(60)) # distancia horizontal entre el vertice superior y el vertice del costado
+    vertices_h=[]
 
-def Pelota():
-    ejes()
+    vertices_h.append((0,0,0))
+    vertices_h.append((largo,0,0))
+    vertices_h.append((largo/2+radio_h, ap_h, 0))
+    vertices_h.append((largo,2*ap_h,0))
+    vertices_h.append((0,2*ap_h,0))      
+    vertices_h.append((-(radio_h-largo/2),ap_h,0))
+
+    dibujar_cara(vertices_h, (1,0,0))
+
+def Pelota(largo):
+    ## PENTAGONO ##
+    radio_p = (largo / (2 * math.sin(math.radians(72/2))))
+    ap_p = largo/(2*math.tan(math.radians(72/2))) # apotema
+    d_p = largo*math.sin(math.radians(72)) # distancia entre base y vertice de los costados
+    a_p = largo*math.cos(math.radians(72)) # distancia horizontal entre el vertice superior y la punta del veritce de los costados
+
+    vertices_p=[]
+    
+    vertices_p.append((0, 0, 0)) 
+    vertices_p.append((largo, 0, 0))
+    vertices_p.append((largo/2 + radio_p, d_p, 0))
+    vertices_p.append((largo/2, ap_p + radio_p, 0))
+    vertices_p.append((-(radio_p-largo/2), d_p, 0))
+    # pentagono central
+    dibujar_cara(vertices_p, (0, 0, 1))
+
+    ## HEXAGONO ##
+    radio_h = (largo / (2 * math.sin(math.radians(60/2))))
+    ap_h = largo/(2*math.tan(math.radians(60/2))) # apotema
+    d_h = largo*math.cos(math.radians(60)) # distancia horizontal entre el vertice superior y el vertice del costado
+    vertices_h=[]
+
+    vertices_h.append((0,0,0))
+    vertices_h.append((largo,0,0))
+    vertices_h.append((largo/2+radio_h, ap_h, 0))
+    vertices_h.append((largo,2*ap_h,0))
+    vertices_h.append((0,2*ap_h,0))      
+    vertices_h.append((-(radio_h-largo/2),ap_h,0))
+
+    # hexagono inferior derecho
     glPushMatrix()
-    #glRotate(17,0,0,1)
-    cara(Pentagono(0.1), (0.4, 0.2, 0.5))
+    glTranslate(radio_h,0,0)
+    glRotate(40,0,1,0)
+    glRotate(-45,0,0,1)
+    
+    dibujar_cara(vertices_h, (1,0,0))
     glPopMatrix()
 
+    # hexagono inferior
     glPushMatrix()
-    #glRotate(10,0,0,1)
-    glTranslate(0.1*2,0,0)
-    
-    
-    
-    
-    #glRotate(,0,0,1)
-    cara(Hexagono(0.1),(0.2, 0.4, 0.8))
+    glRotate(220,1,0,0)
+    dibujar_cara(vertices_h,(1,0,0))
     glPopMatrix()
 
+    # hexagono inferior izquierdo
     glPushMatrix()
-    #glRotate(10,0,0,1)
-    glTranslate(-0.1*2,0,0)
-    #glRotate(,0,0,1)
-    #cara(Hexagono(0.1),(0.2, 0.4, 0.8))
+    glRotate(-40,-0.3,1,0)
+    glRotate(-255,0,0,1)
+    dibujar_cara(vertices_h,(1,0,0))
     glPopMatrix()
 
+    # hexagono superior derecho
+    glPushMatrix()
+    glTranslate(largo/2,radio_p+ap_p,0)
+    glRotate(40,-1,1,0)
+    glRotate(-40,0,0,1)
+    dibujar_cara(vertices_h,(1,0,0))
+    glPopMatrix()
+
+    # hexagono superior izquierdo
+    glPushMatrix()
+    glTranslate(d_h,radio_p+ap_p,0)
+    glRotate(-40,1,1,0)
+    glRotate(-260,0,0,1)
+    dibujar_cara(vertices_h,(1,0,0))
+    glPopMatrix()
+
+    glFlush()
    
+def display():
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
 
+    gluPerspective(45,(width/height),0.1,50.0)
 
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
 
+    gluLookAt(ojox,ojoy,ojoz,0,0,0,0.0,1.0,0.0)
+
+    ejes()
+    #Pentagono(0.3)
+    #Hexagono(0.3)
+    Pelota(0.1)
+
+    glutSwapBuffers()
 
 def buttons(key, x, y):
-    global ojox
+    global ojox,ojoz
     print(f'key={key}')
     if key == b'a':
         ojox += 0.1
+    if key==b'd':
+        ojox-=0.1
+    if key==b'w':
+        ojoz+=0.1
+    if key==b'x':
+        ojoz-=0.1
+    glutPostRedisplay()
 
 def main():
     glutInit(sys.argv)
-    glutInitWindowSize(altura, ancho)
-    glutInitWindowPosition(0, 0)
-    glutCreateWindow(b'Soccer Ball')
-    glutDisplayFunc(display)
-    glutKeyboardFunc(buttons)
-    glutMainLoop()
+
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
+    glutInitWindowSize(width,height)
+    glutCreateWindow(b'Dodecaedro')
 
     glEnable(GL_DEPTH_TEST)
-    glDepthFunc(GL_LESS)
 
-if __name__ == "__main__":
+    glutDisplayFunc(display)
+    glutKeyboardFunc(buttons)
+    
+    glutMainLoop()
+
+if __name__=='__main__':
     main()
 
