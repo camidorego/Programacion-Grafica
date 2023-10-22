@@ -7,6 +7,9 @@ width, height = 800, 800
 
 ojox, ojoy, ojoz = 1, 1, 2
 
+light_position = [1.0, 1.0, 2.0, 0.0]  # Posición inicial de la fuente de luz
+look_at_center = [0.0, 0.0, 0.0]  # Punto hacia el que apunta la luz
+
 def ejes():
     largo=2
 
@@ -141,11 +144,13 @@ def Pelota(largo):
    
 def display():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    #glClearColor(1.0, 1.0, 1.0, 1.0)
 
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
 
-    gluPerspective(45,(width/height),0.1,50.0)
+    #gluPerspective(45,(width/height),0.1,50.0)
+    gluPerspective(40., 1., 1., 40.)
 
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
@@ -156,21 +161,49 @@ def display():
     #Pentagono(0.3)
     #Hexagono(0.3)
     Pelota(0.1)
+    
+    glEnable(GL_LIGHTING)
+    glEnable(GL_LIGHT0)
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position)
+    glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, look_at_center)
+
 
     glutSwapBuffers()
 
+# def buttons(key, x, y):
+#     global ojox,ojoz
+#     print(f'key={key}')
+#     if key == b'a':
+#         ojox += 0.1
+#     if key==b'd':
+#         ojox-=0.1
+#     if key==b'w':
+#         ojoz+=0.1
+#     if key==b'x':
+#         ojoz-=0.1
+#     glutPostRedisplay()
 def buttons(key, x, y):
-    global ojox,ojoz
-    print(f'key={key}')
+    global ojox, ojoz, light_position, look_at_center
+
     if key == b'a':
         ojox += 0.1
-    if key==b'd':
-        ojox-=0.1
-    if key==b'w':
-        ojoz+=0.1
-    if key==b'x':
-        ojoz-=0.1
+        light_position[0] += 0.1
+    elif key == b'd':
+        ojox -= 0.1
+        light_position[0] -= 0.1
+    elif key == b'w':
+        ojoz += 0.1
+        light_position[2] += 0.1
+    elif key == b'x':
+        ojoz -= 0.1
+        light_position[2] -= 0.1
+
+    # Actualiza la dirección de la luz para que siga apuntando al centro
+    look_at_center = [0.0 - light_position[0], 0.0 - light_position[1], 0.0 - light_position[2]]
+
     glutPostRedisplay()
+
+
 
 def main():
     glutInit(sys.argv)
