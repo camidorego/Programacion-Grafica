@@ -71,6 +71,17 @@ def buttons(key, x, y):
         ojoz-=0.1
     glutPostRedisplay()
 
+def otros_botones(key,x,y):
+    global ojox
+    print(key)
+
+    if key == GLUT_KEY_RIGHT:
+        ojox += 0.1
+    if key == GLUT_KEY_LEFT:
+        ojox -= 0.1
+
+    glutPostRedisplay()
+
 def main():
     # se inicializa glut
     glutInit(sys.argv)
@@ -79,11 +90,12 @@ def main():
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
 
     glutInitWindowSize(height, width)
-    glutCreateWindow(b'Ventana 3D Vacia')
+    glutCreateWindow(b'Camila Do Rego')
 
     glEnable(GL_DEPTH_TEST)
     
     glutDisplayFunc(display)
+    glutSpecialFunc(otros_botones)
     glutKeyboardFunc(buttons)
     glutMainLoop()
 

@@ -135,9 +135,6 @@ def otros_botones(key,x,y):
     glutPostRedisplay()
 
 
-   
-
-
 def main():
     # se inicializa glut
     glutInit(sys.argv)
