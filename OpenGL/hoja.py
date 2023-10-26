@@ -144,7 +144,7 @@ def main():
 
     # configuraciones de la ventana
     glutInitWindowSize(800, 800)
-    glutCreateWindow(b'Infinito-Camila')
+    glutCreateWindow(b'Rama con Hojas-Camila')
 
     glutDisplayFunc(display)  # se especifica la función display
     glutMainLoop()  # se inicia el loop
