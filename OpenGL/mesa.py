@@ -37,68 +37,6 @@ def dibujar_cara(vertices, color):
         glVertex3f(*v)
     glEnd()
 
-def mesa2d(largo,angulo):
-    vertices_mesa=[]
-
-    vertices_mesa.append((0,0,0))
-    vertices_mesa.append((largo/2,0,0))
-    vertices_mesa.append((largo/2,largo,0))
-    vertices_mesa.append((0,largo,0))
-
-    # mesa cara 1
-    glPushMatrix()
-    glRotate(-angulo,1,0,0)
-    dibujar_cara(vertices_mesa,(0.4,0,0.5))
-    glPopMatrix()
-
-    # mesa cara 2
-    glPushMatrix()
-    glRotate(-angulo,1,0,0)
-    glTranslate(0,0,largo/10)
-    dibujar_cara(vertices_mesa,(0.7,0,0.2))
-    glPopMatrix()
-
-    # costados de la mesa
-    vertices_mesa_costado1=[]
-    vertices_mesa_costado1.append((0,0,0))
-    vertices_mesa_costado1.append((largo/10,0,0))
-    vertices_mesa_costado1.append((largo/10,largo,0))
-    vertices_mesa_costado1.append((0,largo,0))
-
-    # costado izquierdo
-    glPushMatrix()
-    glRotate(-angulo,1,0,0)
-    glRotate(-90,0,1,0)
-    dibujar_cara(vertices_mesa_costado1,(0,0.4,1))
-    glPopMatrix()
-
-    # costado derecho
-    glPushMatrix()
-    glTranslate(largo/2,0,0)
-    glRotate(-angulo,1,0,0)
-    glRotate(-90,0,1,0)
-    dibujar_cara(vertices_mesa_costado1,(0,1,0.4))
-    glPopMatrix()
-
-    vertices_mesa_costado2=[]
-    vertices_mesa_costado2.append((0,0,0))
-    vertices_mesa_costado2.append((largo/2,0,0))
-    vertices_mesa_costado2.append((largo/2,largo/10,0))
-    vertices_mesa_costado2.append((0,largo/10,0))
-
-    # delantero
-    glPushMatrix()
-    glRotate(90-angulo,1,0,0)
-    dibujar_cara(vertices_mesa_costado2,(0.9,0.2,0))
-    glPopMatrix()
-
-    # trasero
-    glPushMatrix()
-    glTranslate(0,largo*math.sin(math.radians(90-angulo)),-largo*math.cos(math.radians(90-angulo)))
-    glRotate(90-angulo,1,0,0)
-    dibujar_cara(vertices_mesa_costado2,(1,0,1))
-    glPopMatrix()
-
 def mesa(largo, angulo):
     vertices_mesa=[]
 
@@ -167,7 +105,7 @@ def mesa(largo, angulo):
     vertices_pata.append((largo/10,-largo/3,0))
     vertices_pata.append((0,-largo/3,0))
 
-    # para delantera izquierda
+    # pata delantera izquierda
     glPushMatrix()
     glRotate(90-angulo,1,0,0)
     dibujar_cara(vertices_pata,(0,1,0))
@@ -186,13 +124,11 @@ def mesa(largo, angulo):
     glPopMatrix()
 
     glPushMatrix()
-    glTranslate(largo/10,0,0)
+    glTranslate(largo/10*math.cos(math.radians(90-angulo)),(largo/10)*math.sin(math.radians(90-angulo)),0)
     glRotate(90-angulo,1,0,0)
     glRotate(90,0,1,0)
     dibujar_cara(vertices_pata,(0.4,0.4,0.8))
     glPopMatrix()
-
-
 
     glFlush()
     
@@ -213,7 +149,7 @@ def display():
     gluLookAt(ojox,ojoy,ojoz,0,0,0,0.0,1.0,0.0)
 
     ejes()
-    mesa(0.4,90)
+    mesa(0.4,75)
 
     glutSwapBuffers()
 

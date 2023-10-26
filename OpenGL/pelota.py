@@ -2,6 +2,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 import math
+auto_camera_move_interval = 0.5
 
 width, height = 800, 800
 
@@ -225,6 +226,19 @@ def buttons(key, x, y):
 
     glutPostRedisplay()
 
+def update_camera_position(_):
+    global ojox, ojoz, light_position, look_at_center
+
+    # Actualiza la posición de la cámara y la luz automáticamente
+    ojox += 0.1
+    ojoz += 0.1
+    light_position[0] += 0.1
+    light_position[2] += 0.1
+
+    # Actualiza la dirección de la luz para que siga apuntando al centro
+    look_at_center = [0.0 - light_position[0], 0.0 - light_position[1], 0.0 - light_position[2]]
+
+    glutPostRedisplay()
 
 
 def main():
@@ -237,7 +251,8 @@ def main():
     glEnable(GL_DEPTH_TEST)
 
     glutDisplayFunc(display)
-    glutKeyboardFunc(buttons)
+    #glutKeyboardFunc(buttons)
+    glutTimerFunc(int(auto_camera_move_interval * 1000), update_camera_position, 0)
     
     glutMainLoop()
 
