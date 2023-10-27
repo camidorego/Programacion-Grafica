@@ -251,8 +251,8 @@ def main():
     glEnable(GL_DEPTH_TEST)
 
     glutDisplayFunc(display)
-    #glutKeyboardFunc(buttons)
-    glutTimerFunc(int(auto_camera_move_interval * 1000), update_camera_position, 0)
+    glutKeyboardFunc(buttons)
+    #glutTimerFunc(int(auto_camera_move_interval * 1000), update_camera_position, 0)
     
     glutMainLoop()
 
